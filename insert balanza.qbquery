@@ -1,0 +1,3 @@
+﻿insert into balanza ()
+values
+(1,'Balanza Industrial', 80000, 'MXD 1034', 'Toledo', 'mxd2342448', '10', '36465-TOL-2', '2025-05-10', '2024-05-10');

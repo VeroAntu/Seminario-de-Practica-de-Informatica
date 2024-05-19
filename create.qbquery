@@ -1,0 +1,57 @@
+﻿CREATE TABLE  `sistema_balanza`.`balanza` (
+  `balanza_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `descrip` varchar(45) NOT NULL,
+  `cap_max` int(10) unsigned NOT NULL,
+  `modelo` varchar(45) NOT NULL,
+  `marca` varchar(45) NOT NULL,
+  `serie` varchar(45) NOT NULL,
+  `precision` varchar(45) NOT NULL,
+  `nro_cert` varchar(45) NOT NULL,
+  `fecha_vto_cert` date NOT NULL,
+  `fecha_cert` date NOT NULL,
+  PRIMARY KEY (`balanza_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE  `sistema_balanza`.`categoria_prod` (
+  `categ_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `descrip` varchar(45) NOT NULL,
+  PRIMARY KEY (`categ_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE  `sistema_balanza`.`empresa` (
+  `empresa_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `razon_social` varchar(45) NOT NULL,
+  `domicilio` varchar(45) NOT NULL,
+  `cuit` varchar(45) NOT NULL,
+  `tel` varchar(45) NOT NULL,
+  `mail` varchar(45) NOT NULL,
+  `web` varchar(45) NOT NULL,
+  `cdad` varchar(45) NOT NULL,
+  `pcia` varchar(45) NOT NULL,
+  PRIMARY KEY (`empresa_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE  `sistema_balanza`.`producto` (
+  `prod_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `categ_id` int(10) unsigned NOT NULL,
+  `descrip` varchar(45) NOT NULL,
+  PRIMARY KEY (`prod_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE  `sistema_balanza`.`ticket_pesaje` (
+  `ticket_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `balanza_id` int(10) unsigned NOT NULL,
+  `prod_id` int(10) unsigned NOT NULL,
+  `empresa_id` int(10) unsigned NOT NULL,
+  `fecha_hora` datetime NOT NULL,
+  `patente_c` varchar(45) NOT NULL,
+  `patente_a` varchar(45) NOT NULL,
+  `peso_v` double NOT NULL,
+  `peso_ll` double NOT NULL,
+  `obs` varchar(45) NOT NULL,
+  PRIMARY KEY (`ticket_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;

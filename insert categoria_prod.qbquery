@@ -1,0 +1,3 @@
+﻿insert into categoria_prod()
+values
+(1,'Cereal');

@@ -1,0 +1,3 @@
+﻿insert into ticket_pesaje()
+values
+(1,1,1,1,'2024-05-05 12:14:00','AD333DC','AC123EA',25000,70000,'Camion empresa logistica');

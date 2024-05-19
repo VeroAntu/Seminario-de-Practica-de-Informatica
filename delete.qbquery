@@ -1,0 +1,5 @@
+﻿delete from balanza;
+delete from categoria_prod;
+delete from empresa;
+delete from producto;
+delete from ticket_pesaje;

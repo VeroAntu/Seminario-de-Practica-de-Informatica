@@ -1,0 +1,5 @@
+﻿select * from balanza;
+select * from categoria_prod;
+select * from empresa;
+select * from producto;
+select * from ticket_pesaje;
