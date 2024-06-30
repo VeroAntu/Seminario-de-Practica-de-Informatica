@@ -1,7 +1,13 @@
 package logica;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import jdk.jfr.Timestamp;
+import persistencia.Conexion;
 
 public class Ticket_pesaje {
     
@@ -15,8 +21,13 @@ public class Ticket_pesaje {
     private Double peso_v;
     private Double peso_ll;
     private String obs;
+    private Conexion cn;
+    private PreparedStatement ps;
 
     public Ticket_pesaje() {
+        
+         ps = null;
+         cn = new Conexion();
     }
 
     public Ticket_pesaje(int ticket_id, int balanza_id, int prod_id, int empresa_id, LocalDateTime fecha_hora, String patente_c, String patente_a, Double peso_v, Double peso_ll, String obs) {
@@ -113,23 +124,99 @@ public class Ticket_pesaje {
     }
     
     public void registrar_ticket_camion_v(int balanza_id,int empresa_id, LocalDateTime fecha_hora, String patente_c,double peso_v, String obs)
-    {
-        
-        this.setBalanza_id(balanza_id);
-        this.setEmpresa_id(empresa_id);
-        this.setFecha_hora(fecha_hora);
-        this.setPatente_c(patente_c);
-        this.setPeso_v(peso_v);
-        this.setObs(obs);
+    {       
+         String consultaSQL = "insert into ticket_pesaje (balanza_id,empresa_id,patente_c,peso_v,obs) values (?,?,?,?,?)";
+               try{
+                ps = cn.conectarBD().prepareStatement(consultaSQL);   
+                ps.setInt(1, balanza_id);
+                ps.setInt(2, empresa_id);
+                //ps.setDate(3, fecha);
+                 
+                ps.setString(3, patente_c);
+                ps.setDouble(4, peso_v);
+                ps.setString(5, obs);
+                
+                ps.executeUpdate();
+                System.out.println("El Ticket fue agregado con éxito");  
+               } catch(SQLException e){
+                   System.err.println("Error al guardar " + e.getMessage());
+               }finally {
+               ps=null;
+               cn.close();
+               }              
     }
     
-     public void registrar_ticket_camion_ll(int balanza_id,int empresa_id, int prod, String patente_a,double peso_ll, String obs)
+     public void registrar_ticket_camion_ll(int ticket_id, int prod, String patente_a,double peso_ll, String obs)
     {
-        this.setBalanza_id(balanza_id);
-        this.setEmpresa_id(empresa_id);
-        this.setProd_id(prod);
-        this.setPatente_a(patente_a);
-        this.setPeso_ll(peso_ll);
-        this.setObs(obs);
-    }
+       
+        ResultSet resultSet = null;
+        int res = 0;
+        String consultaSQL = "select * from ticket_pesaje where ticket_id =  " + ticket_id;   
+       
+        try {                
+            ps = cn.conectarBD().prepareStatement(consultaSQL);                      
+            resultSet = ps.executeQuery();          
+            
+            if(!resultSet.next()){
+                
+                System.out.println("El ticket de pesaje ingresado no existe en la base de datos");
+            }else
+            {      
+              
+                String consultaSQLup = "update ticket_pesaje set prod_id = '"+prod+"',patente_a = '"+patente_a+"',peso_ll = '"+peso_ll+"', obs = '"+obs+"' where ticket_id= " + ticket_id;
+                                                    
+                ps = cn.conectarBD().prepareStatement(consultaSQLup); 
+               
+                res= ps.executeUpdate();
+                
+                if (res>0){
+                     System.out.println("El ticket ha sido actualizado correctamente");
+                }
+                                            
+            }
+        }catch (SQLException e){
+                   System.err.println("Error al guardar " + e.getMessage());
+               }finally {
+               ps = null;
+               cn.close();
+               }           
+    }    
+     
+     public void listarTickets() throws SQLException {
+        
+        ResultSet resultSet = null;
+        
+        System.out.println("Listado de Tickets de Pesajes");
+        Connection cn= DriverManager.getConnection("jdbc:mysql://localhost:3306/sistema_balanza", "root", "root");
+        String consultaSQL = "select * from ticket_pesaje order by ticket_id";
+        System.out.println("_________________________________________________________________________");
+         System.out.println("NRO TICKET - PROD - EMPRESA - PATENTE C - PATENTE A - PESO V - PESO LL ");
+         System.out.println("________________________________________________________________________");
+        try (PreparedStatement sentencia = cn.prepareStatement(consultaSQL);){
+        
+            resultSet = sentencia.executeQuery();
+                       
+             while (resultSet.next()) {
+                int id   = resultSet.getInt("ticket_id");
+                int id_p = resultSet.getInt("prod_id");
+                int id_e = resultSet.getInt("empresa_id");
+                //LocalDateTime fecha = resultSet.getDate("fecha_hora");
+                
+                String patente_c = resultSet.getString("patente_c");
+                String patente_a = resultSet.getString("patente_a");
+                Double peso_v = resultSet.getDouble("peso_v");
+                Double peso_ll = resultSet.getDouble("peso_ll");
+                System.out.print("    " + id);
+                System.out.print("    -     " + id_p + " ");
+                System.out.print("    -  " + id_e + " ");
+                System.out.print("  -   " + patente_c + " ");
+                System.out.print("  - " + patente_a + " ");
+                System.out.print("  - " + peso_v + " ");
+                System.out.println("  - " + peso_ll);               
+                
+             }
+                
+        }         
+          cn.close();
+    }         
 }

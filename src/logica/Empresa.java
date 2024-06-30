@@ -1,5 +1,10 @@
 package logica;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+
 public class Empresa {
     
     private int empresa_id;
@@ -99,5 +104,11 @@ public class Empresa {
         this.pcia = pcia;
     }
     
-    
+    public void insertarEmpresa(String razonsocial, String domi,String cuit, String tel, String mail, String web, String cdad, String pcia) throws SQLException {
+        
+         System.out.println("insertar empr");
+        String consultaSQL = "INSERT INTO empresa (razon_social,domicilio,cuit,tel,mail,web,cdad,pcia) VALUES (razonsocial,domi,cuit,tel,mail,web,cdad,pcia)";         
+     
+        
+    }
 }

@@ -109,8 +109,6 @@ public class Balanza {
 
     public void setFecha_cert(Date fecha_cert) {
         this.fecha_cert = fecha_cert;
-    }
-    
-    
+    }      
     
 }
